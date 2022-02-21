@@ -1,5 +1,6 @@
 package com.example.wikidogs
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -12,7 +13,9 @@ import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), androidx.appcompat.widget.SearchView.OnQueryTextListener {
+    //SearchView.OnQueryTextListener
+    // para agregar un listener al view de SearchView que tengo en el layout de ActivityMain
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: DogAdapter
     private var dogImages: MutableList<String> = arrayListOf()
@@ -22,6 +25,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initRecyclerView()
+        binding.svBuscar.setOnQueryTextListener(this)
     }
 
     private fun initRecyclerView(){
@@ -54,5 +58,17 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+    }
+
+    //Estas funciones se implementan luego de agregar el listener de SearchView
+    override fun onQueryTextSubmit(query: String): Boolean {
+        if(!query.isNullOrEmpty()){
+            searchByBreed(query!!.lowercase())
+        }
+        return true
+    }
+
+    override fun onQueryTextChange(p0: String?): Boolean {
+        return true
     }
 }
